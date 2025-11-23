@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule } from "@angular/common";
+import { Component, Input, forwardRef } from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
-  selector: 'app-input-field',
+  selector: "app-input-field",
   imports: [CommonModule],
   template: `
     <div class="relative">
@@ -17,15 +17,16 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       />
 
       @if (hint) {
-        <p class="mt-1.5 text-xs"
-          [ngClass]="{
-            'text-error-500': error,
-            'text-success-500': success,
-            'text-gray-500': !error && !success
-          }"
-        >
-          {{ hint }}
-        </p>
+      <p
+        class="mt-1.5 text-xs"
+        [ngClass]="{
+          'text-error-500': error,
+          'text-success-500': success,
+          'text-gray-500': !error && !success
+        }"
+      >
+        {{ hint }}
+      </p>
       }
     </div>
   `,
@@ -38,15 +39,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class InputFieldComponent implements ControlValueAccessor {
-  @Input() type = 'text';
-  @Input() placeholder = '';
+  @Input() type = "text";
+  @Input() placeholder = "";
   @Input() disabled = false;
   @Input() error = false;
   @Input() success = false;
   @Input() hint?: string;
-  @Input() className = '';
-
-  value: any = '';
+  @Input() className = "";
+  @Input() value: any = "";
 
   onChange = (value: any) => {};
   onTouched = () => {};
@@ -74,8 +74,7 @@ export class InputFieldComponent implements ControlValueAccessor {
   }
 
   get inputClasses(): string {
-    let inputClasses =
-      `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${this.className}`;
+    let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${this.className}`;
 
     if (this.disabled) {
       inputClasses += ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700`;
