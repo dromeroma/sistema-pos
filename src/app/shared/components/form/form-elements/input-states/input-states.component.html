@@ -3,15 +3,16 @@
   desc="Validation styles for error, success and disabled states on form controls."
 >
   <div class="space-y-5 sm:space-y-6">
+
     <!-- Error Input -->
     <div>
       <app-label>Email</app-label>
       <app-input-field
         id="email"
         type="email"
-        [value]="email"
+        [(ngModel)]="email"
         [error]="error"
-        (valueChange)="handleEmailChange($event)"
+        (ngModelChange)="validateEmail()"
         placeholder="Enter your email"
         [hint]="error ? 'This is an invalid email address.' : ''"
       />
@@ -23,11 +24,11 @@
       <app-input-field
         id="email-two"
         type="email"
-        [value]="emailTwo"
-        [success]="!error && emailTwo !== ''"
-        (valueChange)="handleEmailTwoChange($event)"
+        [(ngModel)]="emailTwo"
+        [success]="emailTwo !== '' && !error"
+        (ngModelChange)="validateEmailTwo()"
         placeholder="Enter your email"
-        [hint]="!error && emailTwo !== '' ? 'This is an success message.' : ''"
+        [hint]="emailTwo !== '' && !error ? 'This is a success message.' : ''"
       />
     </div>
 
@@ -37,10 +38,11 @@
       <app-input-field
         id="email-three"
         type="text"
-        value="disabled@example.com"
         [disabled]="true"
         placeholder="Disabled email"
+        [(ngModel)]="emailThree"
       />
     </div>
+
   </div>
 </app-component-card>
