@@ -1,0 +1,209 @@
+<div class="flex flex-col gap-4 p-4 bg-gray-50 dark:bg-gray-950 min-h-screen transition-colors">
+
+    <!-- 🔹 Primera fila: formulario + resumen -->
+    <div class="flex flex-col md:flex-row gap-4">
+
+        <!-- 🧾 Sección de entrada de producto -->
+        <div
+            class="flex flex-col gap-3 bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 w-full md:w-2/3 transition-colors">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Agregar productos</h2>
+
+            <div class="flex flex-wrap gap-3 items-center">
+                <input #codeInput type="text" placeholder="Código de barra" [(ngModel)]="code"
+                    (keyup.enter)="onCodeEnter()"
+                    class="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-2 w-52 focus:ring-2 focus:ring-blue-500 outline-none" />
+
+                <input #qtyInput type="number" placeholder="Cant." [(ngModel)]="quantity" (focus)="onQtyFocus()"
+                    (keyup.enter)="focusDiscount()"
+                    class="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-2 w-24 text-center focus:ring-2 focus:ring-blue-500 outline-none" />
+
+                <input #discountInput type="number" placeholder="Discount %" [(ngModel)]="discount"
+                    (keyup.enter)="focusAddButton()"
+                    class="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-2 w-32 text-center focus:ring-2 focus:ring-blue-500 outline-none" />
+
+                <button #addButton (click)="addProduct()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition font-medium shadow-sm focus:ring-2 focus:ring-blue-500">
+                    Agregar
+                </button>
+            </div>
+        </div>
+
+        <!-- 💰 Resumen general -->
+        <div
+            class="flex flex-col justify-between bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 w-full md:w-1/3 transition-colors">
+
+            <!-- Título -->
+            <h2
+                class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+                Resumen
+            </h2>
+
+            <!-- Contenedor de totales -->
+
+            <div class="flex items-stretch justify-between gap-4">
+                <div class="flex flex-col justify-center flex-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-xl transition">
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Cant. productos</p>
+                    <p class="text-2xl font-semibold text-gray-800 dark:text-gray-100">{{ totalProducts }}</p>
+                </div>
+
+                <!-- <div class="flex flex-col justify-center flex-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-xl transition">
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Total a pagar</p>
+                    <p class="text-2xl font-semibold text-green-600 dark:text-green-400">{{ totalValue | currency }}</p>
+                </div> -->
+
+                <!-- <div class="flex flex-col justify-center flex-1 p-3 rounded-xl transition cursor-pointer
+         bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700
+         active:scale-95 select-none disabled:cursor-not-allowed disabled:opacity-50 transition-transform duration-150 ease-in-out"
+                    [class.pointer-events-none]="totalValue === 0" (click)="onPayClick()">
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Total a pagar</p>
+                    <p class="text-2xl font-semibold" [class.text-green-600]="totalValue > 0"
+                        [class.text-gray-400]="totalValue === 0">
+                        {{ totalValue | currency }}
+                    </p>
+                </div> -->
+                <div class="flex flex-col justify-center flex-1 p-3 rounded-xl transition
+         bg-gray-50 dark:bg-gray-800 select-none
+         hover:bg-gray-100 dark:hover:bg-gray-600
+         active:scale-95 duration-150 ease-in-out" [class.cursor-pointer]="totalValue > 0"
+                    [class.opacity-50]="totalValue === 0" [class.pointer-events-none]="totalValue === 0"
+                    (click)="onPayClick()">
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Total a pagar</p>
+                    <p class="text-2xl font-semibold transition-colors duration-150 text-green-600 dark:text-green-400"
+                        [class.text-green-600]="totalValue > 0" [class.text-gray-400]="totalValue === 0">
+                        {{ totalValue | currency }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Segunda fila: detalles del producto escaneado -->
+    <div *ngIf="selectedProduct"
+        class="bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 transition-colors">
+        <p class="font-semibold text-lg mb-3 text-gray-800 dark:text-gray-100">Información de productos</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-700 dark:text-gray-300">
+            <div><span class="font-medium text-gray-900 dark:text-gray-200">Código:</span> {{ selectedProduct.code }}
+            </div>
+            <div><span class="font-medium text-gray-900 dark:text-gray-200">Nombre:</span> {{ selectedProduct.name }}
+            </div>
+            <div><span class="font-medium text-gray-900 dark:text-gray-200">Stock:</span> {{ selectedProduct.stock }}
+            </div>
+            <div><span class="font-medium text-gray-900 dark:text-gray-200">Precio:</span> {{ selectedProduct.price |
+                currency }}</div>
+        </div>
+    </div>
+
+    <!-- 🔹 Tercera fila: tabla dinámica -->
+    <div
+        class="bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-x-auto transition-colors">
+        <table class="min-w-full text-sm text-left border-collapse">
+            <thead class="border-b border-gray-300 dark:border-gray-700">
+                <tr class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                    <th class="py-2 px-4 font-semibold">N°</th>
+                    <th class="py-2 px-4 font-semibold">Código</th>
+                    <th class="py-2 px-4 font-semibold">Nombre</th>
+                    <th class="py-2 px-4 font-semibold">Cantidad</th>
+                    <th class="py-2 px-4 font-semibold">Valor unitario</th>
+                    <th class="py-2 px-4 font-semibold">Total</th>
+                    <th class="py-2 px-4 font-semibold text-center">Acciones</th> <!-- ✅ NUEVA COLUMNA -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr #rowRef *ngFor="let item of productList; let i = index"
+                    class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                    <td class="py-2 px-4 text-gray-700 dark:text-gray-300">{{ i + 1 }}</td>
+                    <td class="py-2 px-4 text-gray-700 dark:text-gray-300">{{ item.code }}</td>
+                    <td class="py-2 px-4 text-gray-700 dark:text-gray-300">{{ item.name }}</td>
+
+                    <!-- Campo editable -->
+                    <td class="py-2 px-4 text-gray-700 dark:text-gray-300">
+                        <input *ngIf="editingIndex === i" #editInput type="text" inputmode="decimal"
+                            [(ngModel)]="editValues[i]" (keyup.enter)="saveEdit(i)"
+                            (keydown)="filterNumericInput($event)"
+                            class="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md px-2 py-1 w-20 text-center focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <span *ngIf="editingIndex !== i">{{ item.quantity }}</span>
+                    </td>
+
+                    <td class="py-2 px-4 text-gray-700 dark:text-gray-300">
+                        {{ item.price | currency }}
+                    </td>
+                    <td class="py-2 px-4 text-gray-700 dark:text-gray-300">
+                        {{ item.total | currency }}
+                    </td>
+
+                    <!-- Botones -->
+                    <td class="py-2 px-4 text-center flex justify-center gap-2">
+                        <!-- Botón editar -->
+                        <button (click)="startEdit(i)" *ngIf="editingIndex !== i"
+                            class="p-1 rounded-md transition hover:scale-125 text-yellow-500 dark:text-yellow-500"
+                            title="Editar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5"
+                                class="w-5 h-5 dark:text-yellow-500 hover:text-yellow-700 fill-none">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                        </button>
+
+                        <!-- Botón guardar (cuando está en modo edición) -->
+                        <button (click)="saveEdit(i)" *ngIf="editingIndex === i"
+                            class="p-1 rounded-md transition hover:scale-125 text-green-500 dark:text-green-500"
+                            title="Guardar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5"
+                                class="w-5 h-5 dark:text-green-500 hover:text-green-700 fill-none">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />
+                            </svg>
+                        </button>
+
+                        <!-- Botón eliminar -->
+                        <button (click)="deleteProduct(i)"
+                            class="p-1 rounded-md transition hover:scale-125 text-red-500 dark:text-red-500"
+                            title="Eliminar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5 dark:text-red-500 hover:text-red-700 fill-none">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="productList.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-3 text-sm">
+            Aún no se han añadido productos.
+        </div>
+    </div>
+</div>
+
+<app-modal [isOpen]="isProductNotFound" (close)="closeProductNotFoundModal()" className="max-w-[400px] p-6 lg:p-8">
+    <div class="flex flex-col items-center text-center px-2">
+        <!-- Icono opcional -->
+        <div class="mb-4">
+            <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856A2 2 0 0020 17.09L12.944 4.618a2 2 0 00-3.888 0L4 17.09A2 2 0 005.062 19z" />
+            </svg>
+        </div>
+
+        <!-- Título -->
+        <h5 class="mb-2 font-semibold text-gray-800 dark:text-white/90 text-lg">
+            Producto no encontrado
+        </h5>
+
+        <!-- Texto -->
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            El código ingresado no corresponde a ningún producto existente.
+        </p>
+
+        <!-- Botón de cierre -->
+        <button (click)="closeProductNotFoundModal()" type="button"
+            class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2 rounded-lg font-medium transition">
+            Aceptar
+        </button>
+    </div>
+</app-modal>

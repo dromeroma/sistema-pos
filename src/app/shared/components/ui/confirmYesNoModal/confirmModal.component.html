@@ -1,0 +1,89 @@
+@if (config.isOpen) {
+  <!-- backdrop -->
+  <div class="absolute inset-0 z-10 flex items-center justify-center px-4 py-6">
+    <!-- fondo semitransparente (modo claro/oscuro) -->
+    <div
+      class="fixed inset-0 bg-gray-800/40 backdrop-blur-sm"
+      (click)="closeOutside()"
+      aria-hidden="true"
+      [ngClass]="{
+        'bg-black/60': true
+      }"
+    ></div>
+
+    <!-- contenedor del modal -->
+    <div
+      #modalContainer
+      class="relative z-40 max-w-sm w-full rounded-2xl shadow-2xl border p-6
+             bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-100
+             ring-1 ring-gray-200 dark:ring-gray-700 transition-all -translate-y-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-title"
+      aria-describedby="confirm-desc"
+      tabindex="0"
+    >
+      <!-- close (opcional) -->
+      <button
+        class="absolute right-3 top-3 rounded-full p-1 text-gray-500 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+        aria-label="Cerrar"
+        (click)="no()"
+        [disabled]="config.loading"
+      >
+        ✖
+      </button>
+
+      <!-- icon + title -->
+      <div class="flex items-start gap-3 mb-3">
+        <!-- <div class="text-3xl">❓</div> -->
+        <div class="flex-1">
+          <h2 id="confirm-title" class="text-lg font-semibold leading-tight">
+            {{ config.title }}
+          </h2>
+        </div>
+      </div>
+
+      <p id="confirm-desc" class="text-sm mb-6 leading-relaxed">
+        {{ config.message }}
+      </p>
+
+      <!-- botones -->
+      <div class="flex items-center justify-end gap-3">
+        <!-- No -->
+        <button
+          #btnNo
+          type="button"
+          (click)="no()"
+          [disabled]="config.loading"
+          class="px-4 py-2 rounded-lg text-sm font-medium
+                 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400
+                 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-offset-0
+                 transition"
+        >
+          No
+        </button>
+
+        <!-- Sí (default focus) -->
+        <button
+          #yesBtn
+          id="confirm-yes"
+          type="button"
+          (click)="yes()"
+          [disabled]="config.loading"
+          class="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2
+                 bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-400 text-white
+                 dark:focus:ring-offset-0 transition"
+        >
+          <!-- Mostrar texto o spinner -->
+          <ng-container *ngIf="!config.loading; else loadingTpl">
+            Sí
+          </ng-container>
+
+          <ng-template #loadingTpl>
+            <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block" aria-hidden="true"></span>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+  </div>
+}
