@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
     const user = await this.auth.getUser(); // revisar si hay usuario logueado
 
     if (!user) {
-      this.router.navigate(['/login']); // redirigir si NO está logueado
+      this.router.navigate(['/signin']); // redirigir si NO está logueado
       return false;
     }
 
