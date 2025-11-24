@@ -5,6 +5,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SafeHtmlPipe } from '../../pipe/safe-html.pipe';
 import { SidebarWidgetComponent } from './app-sidebar-widget.component';
 import { combineLatest, Subscription } from 'rxjs';
+import { LogoService, LogoUrls  } from "../../../services/logo.service";
 
 type NavItem = {
   name: string;
@@ -118,17 +119,23 @@ export class AppSidebarComponent {
 
   private subscription: Subscription = new Subscription();
 
+  logoUrls: LogoUrls = { dark: '', light: '' };
+
   constructor(
     public sidebarService: SidebarService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private logoService: LogoService
   ) {
     this.isExpanded$ = this.sidebarService.isExpanded$;
     this.isMobileOpen$ = this.sidebarService.isMobileOpen$;
     this.isHovered$ = this.sidebarService.isHovered$;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+    this.logoUrls = await this.logoService.getLogoUrls();
+
     // Subscribe to router events
     this.subscription.add(
       this.router.events.subscribe(event => {
