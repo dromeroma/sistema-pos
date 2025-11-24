@@ -24,7 +24,7 @@ export class LogoService {
 
     const hostname = window.location.hostname; // ej: bacota.savvypos.com
     const subdomain = hostname.split(".")[0]; // "bacota"
-    const exts = ["svg", "png", "jpg"]; // prioridades de extensión
+    const exts = ["svg", "png", "jpeg"]; // prioridades de extensión
 
     let darkUrl = "";
     let lightUrl = "";
