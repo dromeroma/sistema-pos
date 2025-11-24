@@ -1,42 +1,63 @@
 // logo.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+
+export interface LogoUrls {
+  dark: string;
+  light: string;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class LogoService {
-  private supabaseBaseUrl = "https://ojbhhxouklkztynalizp.supabase.co/storage/v1/object/public/logosStoresSavvyPos/";
-  private logoUrlCache: string | null = null; // Guardar logo ya resuelto
+  private supabaseBaseUrl =
+    "https://ojbhhxouklkztynalizp.supabase.co/storage/v1/object/public/logosStoresSavvyPos/";
+  private logoCache: LogoUrls | null = null; // Cache de logos
 
   constructor() {}
 
-  // Método público para obtener el logo
-  async getLogoUrl(): Promise<string> {
-    // Retornar cache si ya se resolvió antes
-    if (this.logoUrlCache) {
-      return this.logoUrlCache;
+  // Método público que retorna ambas URLs
+  async getLogoUrls(): Promise<LogoUrls> {
+    if (this.logoCache) {
+      return this.logoCache;
     }
 
     const hostname = window.location.hostname; // ej: bacota.savvypos.com
     const subdomain = hostname.split(".")[0]; // "bacota"
-    const exts = ["svg", "png", "jpg"];        // prioridades de extensión
+    const exts = ["svg", "png", "jpg"]; // prioridades de extensión
 
-    // Buscar logo en Supabase
+    let darkUrl = "";
+    let lightUrl = "";
+
+    // Buscar dark mode primero
     for (const ext of exts) {
       const url = `${this.supabaseBaseUrl}logo-${subdomain}-dark.${ext}`;
       try {
         const response = await fetch(url, { method: "HEAD" });
         if (response.ok) {
-          this.logoUrlCache = url;
-          return url;
+          darkUrl = url;
+          break;
         }
-      } catch (error) {
-        console.warn(`No se encontró logo con extensión ${ext}`);
-      }
+      } catch (error) {}
     }
 
-    // Si no hay logo, fallback local
-    this.logoUrlCache = `/images/logo/logo-bacota-light.svg`;
-    return this.logoUrlCache;
+    // Buscar light mode
+    for (const ext of exts) {
+      const url = `${this.supabaseBaseUrl}logo-${subdomain}-light.${ext}`;
+      try {
+        const response = await fetch(url, { method: "HEAD" });
+        if (response.ok) {
+          lightUrl = url;
+          break;
+        }
+      } catch (error) {}
+    }
+
+    // Fallback si no se encuentra
+    if (!darkUrl) darkUrl = `/images/logo/logo-bacota-dark.svg`;
+    if (!lightUrl) lightUrl = `/images/logo/logo-bacota-light.svg`;
+
+    this.logoCache = { dark: darkUrl, light: lightUrl };
+    return this.logoCache;
   }
 }
