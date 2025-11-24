@@ -43,16 +43,20 @@ export class SigninFormComponent {
     this.error = "";
     this.loading = true;
 
-    const { data, error } = await this.auth.login(this.email, this.password);
+    const result = await this.auth.login(this.email, this.password);
+
+    console.log("Resultado del login:", result);
 
     this.loading = false;
 
-    if (error) {
-      this.error = "Credenciales incorrectas";
+    if (result?.error) {
+      this.error = "Credenciales incorrectas MMMM";
       return;
     }
 
     // si el login es exitoso → redirigir
-    this.router.navigate(["/dashboard"]);
+    if (result?.user) {
+      this.router.navigate(["/dashboard"]);
+    }
   }
 }
