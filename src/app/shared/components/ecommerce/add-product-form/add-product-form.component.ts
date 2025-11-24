@@ -63,7 +63,7 @@ export class AddProductFormComponent {
     }
   }
 
-  updateQuantity(value: string | number) {
+  updateQuantity(value: string | number | any) {
     this.stockQuantity = typeof value === 'string' ? parseInt(value) || 0 : value;
   }
 
