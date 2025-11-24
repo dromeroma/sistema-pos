@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ThemeToggleButtonComponent } from '../../components/common/theme-toggle/theme-toggle-button.component';
 import { NotificationDropdownComponent } from '../../components/header/notification-dropdown/notification-dropdown.component';
 import { UserDropdownComponent } from '../../components/header/user-dropdown/user-dropdown.component';
+import { LogoService, LogoUrls  } from "../../../services/logo.service";
 
 @Component({
   selector: 'app-header',
@@ -20,11 +21,16 @@ import { UserDropdownComponent } from '../../components/header/user-dropdown/use
 export class AppHeaderComponent {
   isApplicationMenuOpen = false;
   readonly isMobileOpen$;
+  logoUrls: LogoUrls = { dark: '', light: '' };
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  constructor(public sidebarService: SidebarService) {
+  constructor(public sidebarService: SidebarService, private logoService: LogoService) {
     this.isMobileOpen$ = this.sidebarService.isMobileOpen$;
+  }
+
+  async ngOnInit() {
+    this.logoUrls = await this.logoService.getLogoUrls();
   }
 
   handleToggle() {
